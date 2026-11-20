@@ -9,6 +9,11 @@
 | Terminal native workers | Failed | The terminal spawn schema had no per-worker working directory. Two real children edited the integration checkout. |
 | Terminal separate CLI processes | Passed | Two workers edited distinct files at the same relative path. A resumed worker fixed its original checkout after an independent failed check. |
 | Desktop native dispatch and follow-up | Untested | The live workers and reviewers in this experiment all ran through the terminal CLI. |
+| Desktop-authored ticket handoff | Passed | The desktop task authored one ticket and a fresh terminal router read its approved revision from Git. |
+| Terminal-authored ticket handoff | Passed | A separate CLI writer authored the second ticket, exited, and left the ready work idle for explicit dispatch. |
+| Installed terminal router and role prompts | Passed | The fresh router opened the installed `.agents/skills/router/SKILL.md`. The installed command loaded prompts from `.superagent/roles/` for two workers, testers, reviewers and detached checkers. |
+
+The [solo acceptance run](acceptance/solo-batch.md) records the installed runtime, handoff, worker correction, merged revisions and local delivery.
 
 ### Native edits
 
