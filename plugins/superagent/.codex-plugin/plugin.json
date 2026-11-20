@@ -1,0 +1,16 @@
+{
+  "name": "superagent",
+  "version": "0.1.0",
+  "description": "Set up and upgrade the Superagent ticket and router workflow in a Git project.",
+  "author": { "name": "Sergey Legotin" },
+  "repository": "https://github.com/sslegotin/codex-superagent",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Superagent",
+    "shortDescription": "Configure a project for parallel Codex workers.",
+    "developerName": "Sergey Legotin",
+    "category": "Developer Tools",
+    "defaultPrompt": ["Set up Superagent in this repository."]
+  }
+}

@@ -1,8 +1,8 @@
 const test = require('node:test'),
   assert = require('node:assert/strict'),
-  { validateContract } = require('../lib/team.cjs');
+  { validateContract } = require('../plugins/superagent/distribution/lib/team.cjs');
 const { fixture, write } = require('./helpers.cjs');
-const { start, prepare, transaction } = require('../lib/jobs.cjs'),
+const { start, prepare, transaction } = require('../plugins/superagent/distribution/lib/jobs.cjs'),
   { project } = require('./project.cjs');
 test('team ownership requires at least two members, one integration owner, disjoint paths', (t) => {
   const dir = fixture(t),

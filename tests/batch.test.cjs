@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { selectBatch } = require('../lib/batch.cjs');
+const { selectBatch } = require('../plugins/superagent/distribution/lib/batch.cjs');
 
 const board = (...rows) =>
   ['| # | Title | Status | Mode | Runs | Batch |', '|---|---|---|---|---|---|', ...rows].join('\n');

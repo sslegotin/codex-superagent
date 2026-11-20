@@ -1,6 +1,17 @@
 # Installing Codex Superagent
 
-Use a local checkout of this distribution, Node.js and Git. Pass the root of the target Git repository as the directory argument. The examples use a shell variable for the checkout containing this guide.
+Install the Superagent marketplace and plugin once. Use a Git URL accessible to your account. A personal SSH host alias works here as well.
+
+```sh
+codex plugin marketplace add https://github.com/sslegotin/codex-superagent.git
+codex plugin add superagent@codex-superagent
+```
+
+In a fresh Codex session in the target Git project, ask **“Use $superagent:setup to configure this repository.”** The plugin exposes the setup skill and carries its own installer. Setup reads project files, collects missing settings, installs the runtime and verifies it. Commit the resulting `.superagent/` and `.agents/skills/` files in the target. Use `$write-tickets` and `$router` from that project. Git and Node.js are required.
+
+### Installing from a source checkout
+
+The original script entry point is also supported. Pass the target Git worktree root as the directory argument.
 
 ```sh
 distribution=/path/to/codex-superagent
@@ -32,7 +43,9 @@ The installer copies the approved settings to `.superagent/project.json`. Edit t
 
 ## Upgrading
 
-Run `install` and `verify` from the new distribution using the same target. Existing project settings take precedence over a supplied settings file. The installer uses `.superagent/manifest.json` to track which distributed and local contents it has seen. It updates pristine files automatically, preserves unrelated files and leaves retired files in place.
+Refresh the Git marketplace with `codex plugin marketplace upgrade codex-superagent` and install the updated plugin version with `codex plugin add superagent@codex-superagent`. In each project you want to upgrade, start a fresh session and ask the plugin to upgrade Superagent. Review and commit that project's changes. For installations from source, run `install` and `verify` from the new distribution.
+
+Existing project settings take precedence over a supplied settings file. The installer uses `.superagent/manifest.json` to track which distributed and local contents it has seen. It updates pristine files automatically, preserves unrelated files and leaves retired files in place. Projects configured before the plugin may still have a local `setup` skill pointing at the old source checkout. Use the setup skill from the Superagent plugin for upgrades.
 
 When local contents differ, the installer prints a Git diff for each affected path and exits with status 2 before applying the upgrade. Review the diff, edit or merge files by hand if needed, and rerun with one decision per affected path. Set `review_token` to the digest printed alongside the diffs. It binds the decision to those exact local and incoming versions. For example, the following command keeps the local router skill and replaces the tester prompt with the new distribution's version.
 
@@ -53,3 +66,5 @@ Verification reads every managed file, compares it with the release inventory or
 On macOS on 2026-11-20, a fresh Git repository with a `package.json` test script produced the candidate check `["npm", "run", "test"]`. Install, verify and a second install each verified 28 managed files. The installed runtime printed its command list with `help`. Before any run, `status unstarted` exited 1 with `No run for unstarted`.
 
 With Codex CLI 0.166.0, the terminal app server's `skills/list` request against that checkout returned `router`, `setup` and `write-tickets` with repository scope, enabled status and zero loading errors. Each resolved to its own `.agents/skills/<name>/SKILL.md`. The same result was observed with fresh Codex settings and with the temporary project explicitly trusted. This local discovery check ran with IP networking disabled. Role prompts are packaged in `.superagent/roles/` for the runtime to load by path. Desktop discovery is untested.
+
+The version 0.1.0 marketplace package was installed with Codex CLI 0.166.0 in an isolated profile. From an unrelated repository, Codex discovered `superagent:setup` in the plugin cache and the two project skills after provisioning. The cached installer verified 29 managed files with the marketplace source moved aside. A simulated version upgrade surfaced a locally edited worker prompt, accepted the keep decision, and preserved the project settings.

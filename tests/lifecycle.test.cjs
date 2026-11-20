@@ -4,11 +4,11 @@ const fs = require('node:fs'),
   path = require('node:path');
 const { project } = require('./project.cjs'),
   { git, write } = require('./helpers.cjs');
-const { start, prepare, snapshot, transaction } = require('../lib/jobs.cjs');
-const { act } = require('../lib/agent.cjs');
-const { merge, delivery, waive, exclude, returnTicket, sync } = require('../lib/actions.cjs');
-const { board } = require('../lib/board.cjs');
-const { reconcile, retry } = require('../lib/reconcile.cjs');
+const { start, prepare, snapshot, transaction } = require('../plugins/superagent/distribution/lib/jobs.cjs');
+const { act } = require('../plugins/superagent/distribution/lib/agent.cjs');
+const { merge, delivery, waive, exclude, returnTicket, sync } = require('../plugins/superagent/distribution/lib/actions.cjs');
+const { board } = require('../plugins/superagent/distribution/lib/board.cjs');
+const { reconcile, retry } = require('../plugins/superagent/distribution/lib/reconcile.cjs');
 
 function answer(id, edit, message) {
   return async (opts) => {
@@ -171,7 +171,7 @@ test('a waived check is traceable from the landed Git commit', async (t) => {
   assert.deepEqual(JSON.parse(git(cwd, 'show', landed + ':specs/tickets/001-test/waivers.json')), [
     { check: 'E-1', reason: 'User waived unavailable staging environment', revision: reviewed }
   ]);
-  const metrics = require('../lib/board.cjs').metrics(cwd, 'demo');
+  const metrics = require('../plugins/superagent/distribution/lib/board.cjs').metrics(cwd, 'demo');
   assert.equal(metrics.roles.tester.turns, 1);
   assert.ok(metrics.roles.tester.activeMs >= 0);
   assert.equal(metrics.landings, 1);
