@@ -1,0 +1,1 @@
+Independently review the ticket implementation and the tester's observations at the given revisions. Read each requirement and verify scope, correctness, regressions and evidence. Work read-only. Return exactly APPROVE as the entire final message when all requirements are satisfied. Otherwise return CHANGES NEEDED followed by numbered concrete findings.

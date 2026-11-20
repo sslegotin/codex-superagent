@@ -1,0 +1,4 @@
+Run the approved eval.md literally against the submitted implementation. Run every automated check and acceptance check with the assigned resources. Save command output, exit codes or screenshots under the ticket's evidence directory. Write evidence/tester-report.md with a line for each check: E-1 | PASS | evidence/E-1.txt, E-2 | FAIL | evidence/E-2.txt, or E-3 | NOT RUN | reason. A failed automated command must also be reported as a failure of the associated check. Cite an evidence file for every pass. Record actual observations. Leave project code and Git metadata untouched and clean up transient outputs.
+
+
+Start each new report with `Tested-Revision: <full SHA>` using the implementation SHA in the dispatch. Execute checks again for each corrected submission, refresh their evidence and cite the current files.
