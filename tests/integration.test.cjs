@@ -8,7 +8,7 @@ const { spawn } = require('node:child_process');
 const { once } = require('node:events');
 const { fixture, write, git, commit } = require('./helpers.cjs');
 
-const integrationPath = path.resolve(__dirname, '../lib/integration.cjs');
+const integrationPath = path.resolve(__dirname, '../plugins/superagent/distribution/lib/integration.cjs');
 const integrate = (options) => require(integrationPath).integrate(options);
 const deliver = (options) => require(integrationPath).deliver(options);
 const folders = ['specs/tickets/001-start', 'specs/tickets/002-finish'];
@@ -90,40 +90,20 @@ test('a conflict and a failed check leave the batch and its checkout untouched',
   assert.equal(git(cwd, 'rev-parse', 'HEAD'), before);
 });
 
-test('simultaneous callers cannot run checks on two candidates concurrently', async (t) => {
+test('simultaneous callers cannot run checks on two candidates concurrently', (t) => {
   const {
     cwd,
     submissions: [one, two]
   } = prepare(t);
-  const signalDir = fs.mkdtempSync(path.join(os.tmpdir(), 'superagent-signals-'));
-  t.after(() => fs.rmSync(signalDir, { recursive: true, force: true }));
-  const signal = path.join(signalDir, 'checking');
-  const release = path.join(signalDir, 'release');
-  const check =
-    "const fs=require('fs');fs.writeFileSync(process.argv[1],'');const end=Date.now()+12000;while(!fs.existsSync(process.argv[2])){if(Date.now()>end)process.exit(8);Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0,25)}";
-  one.checks = [[process.execPath, '-e', check, signal, release]];
-  const child = spawn(
-    process.execPath,
-    [
-      '-e',
-      'require(process.argv[1]).integrate(JSON.parse(process.argv[2]))',
-      integrationPath,
-      JSON.stringify(one)
-    ],
-    { stdio: 'ignore' }
-  );
-  const closed = once(child, 'close');
-  try {
-    for (let tries = 0; tries < 240 && child.exitCode === null && !fs.existsSync(signal); tries++) {
-      await new Promise((resolve) => setTimeout(resolve, 25));
-    }
-    assert.ok(fs.existsSync(signal), 'first merger reached its check');
-    assert.throws(() => integrate(two), /busy|lock|owned/i);
-  } finally {
-    fs.writeFileSync(release, '');
-    await closed;
-  }
-  assert.equal(child.exitCode, 0);
+  // Invoke the competing process inside the first merger's integration check,
+  // while the first process still owns the lock.
+  const contender = [
+    "const assert = require('node:assert/strict');",
+    "const { integrate } = require(process.argv[1]);",
+    "assert.throws(() => integrate(JSON.parse(process.argv[2])), /busy|lock|owned/i);"
+  ].join('\n');
+  one.checks = [[process.execPath, '-e', contender, integrationPath, JSON.stringify(two)]];
+  assert.equal(integrate(one), git(cwd, 'rev-parse', 'HEAD'));
   assert.equal(integrate(two), git(cwd, 'rev-parse', 'HEAD'));
 });
 

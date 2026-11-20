@@ -24,10 +24,10 @@ function environment(t) {
   const dist = fixture(t),
     target = fixture(t);
   for (const file of ['lib/manifest.cjs', 'scripts/setup.cjs']) {
-    const src = path.join(__dirname, '..', file);
+    const src = path.join(__dirname, '../plugins/superagent/distribution', file);
     if (fs.existsSync(src)) write(dist, file, fs.readFileSync(src));
   }
-  for (const name of ['router', 'setup', 'write-tickets'])
+  for (const name of ['router', 'write-tickets'])
     write(dist, 'skills/' + name + '/SKILL.md', name + ' skill\n');
   for (const name of [
     'worker',

@@ -33,7 +33,7 @@ function contents(file) {
 
 function inventory(source) {
   const files = new Map();
-  const skillNames = ['router', 'write-tickets', 'setup'];
+  const skillNames = ['router', 'write-tickets'];
   const roles = ['worker', 'tester', 'reviewer', 'merger', 'checker', 'teammate', 'watchdog', 'reproducer'];
   function add(relative) {
     const file = safePath(source, relative);

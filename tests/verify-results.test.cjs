@@ -1,7 +1,7 @@
 const test = require('node:test'),
   assert = require('node:assert/strict');
 const { fixture, write, commit } = require('./helpers.cjs');
-const { verify } = require('../lib/verify-results.cjs');
+const { verify } = require('../plugins/superagent/distribution/lib/verify-results.cjs');
 const folder = 'specs/tickets/001-test';
 for (const [label, line, verdict, waivers, expected] of [
   ['pass', 'PASS | evidence/check.txt', 'APPROVE', [], true],

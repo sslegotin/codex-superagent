@@ -4,7 +4,14 @@ Write tickets in one Codex session and run them in another. A terminal router co
 
 ## First batch
 
-1. Install the distribution into a Git project with at least one commit. Setup needs the project's real check commands, worker limit and port/data isolation settings. Commit the installed files. [Installation and upgrades](docs/setup.md)
+Install the setup plugin once in Codex:
+
+```sh
+codex plugin marketplace add https://github.com/sslegotin/codex-superagent.git
+codex plugin add superagent@codex-superagent
+```
+
+1. Open the Git project you want to configure in a fresh Codex session and ask **“Use $superagent:setup to configure this repository.”** Setup discovers check commands and asks about the worker limit and port/data isolation. Commit the installed files in the target project. The router needs at least one commit with approved inputs. [Installation and upgrades](docs/setup.md)
 2. Open the project in Codex and invoke `$write-tickets`. Describe the feature, review the requirements and checks, then ask to mark the batch ready. The writer commits the approved inputs. You can close this session.
 3. From the target project's base checkout, start a fresh `codex` terminal session. Say **“Use $router to run batch text-tools”**, substituting the approved batch name. The router checks dependencies and dispatches the eligible tickets. An inspection or a ready status alone leaves a batch idle.
 4. The router sends failed checks back to the same worker and tests the corrected revision again. Answer any questions about blocked requirements or checks that could not run. Once the batch settles, choose a local merge or a Git push and browser PR creation link.
@@ -14,6 +21,8 @@ To inspect progress from another terminal in the same project:
 ```sh
 node .superagent/scripts/superagent.cjs board text-tools --watch
 ```
+
+The board refreshes every three seconds. It shows the active role for each ticket, dependency waits, and alerts from the most recent watchdog round. Ten minutes without a new agent event triggers a quiet alert. An off-track alert names a changed path matching a ticket’s `Do not touch` rule. The router runs `watchdog text-tools` during active waits. You can also run that command for a fresh scan.
 
 ## How work moves through Git
 
