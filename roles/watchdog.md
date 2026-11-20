@@ -1,0 +1,1 @@
+Inspect active jobs flagged by the board, their last activity, worktrees, and the latest evidence. Report a concrete diagnosis. A worker still producing output may be healthy. Consult the router before interrupting any session. For a repeated alert preserve its branch and session lineage before retrying. Escalate a stale lease to the user before clearing it.
